@@ -1,6 +1,6 @@
 import os
 import uvicorn
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Response, File, UploadFile, File
 # from models import ModelName
 from controller import Controller as con
 
@@ -21,3 +21,13 @@ async def decode_QR_Image():
 	return {"data": res }
 	#return {"sensor": "404 - not sensor found!"}
 
+@app.post("/uploadfile/")
+async def create_upload_file(file: UploadFile = File(...)):
+	return {"filename": file.filename}
+
+
+@app.post("/qr/decode")
+async def create_upload_file(file: UploadFile = File(...)):
+	# return {"filename": file.filename}
+	res = con.Controller.decodeImageQR(file.filename)
+	return {"data": res }
