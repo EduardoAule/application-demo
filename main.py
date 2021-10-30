@@ -3,6 +3,11 @@ import uvicorn
 from fastapi import FastAPI, Response, File, UploadFile, File
 # from models import ModelName
 from controller import Controller as con
+# frece varias operaciones de alto nivel en archivos y colecciones de archivos
+import shutil
+from pathlib import Path
+from tempfile import NamedTemporaryFile
+from typing import Callable
 
 app = FastAPI()
 
@@ -26,8 +31,27 @@ async def create_upload_file(file: UploadFile = File(...)):
 	return {"filename": file.filename}
 
 
-@app.post("/qr/decode")
+@app.post("/qr/deco")
 async def create_upload_file(file: UploadFile = File(...)):
 	# return {"filename": file.filename}
-	res = con.Controller.decodeImageQR(file.filename)
+	# contents = await file.read()
+	res = con.Controller.decodeImageQR("C:\\Users\\Edu\\AppData\\Local\\Temp\\tmphimqifml.png")
 	return {"data": res }
+
+@app.post("/qr/decode")
+def save_upload_file_tmp(upload_file: UploadFile = File(...)) :
+	try:
+		suffix = Path(upload_file.filename).suffix
+		with NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+			shutil.copyfileobj(upload_file.file, tmp)
+			tmp_path = Path(tmp.name)
+			print("path:", tmp_path)
+			print("path str:", tmp_path.__str__())
+			print("path pox:", tmp_path.as_posix())
+			
+	finally:
+		upload_file.file.close()
+		res = con.Controller.decodeImageQR(tmp_path.__str__())
+	return {"decode": res, "path": tmp_path}
+	#return {"decode": res }
+
