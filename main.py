@@ -7,7 +7,6 @@ from controller import Controller as con
 import shutil
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import Callable
 
 app = FastAPI()
 
@@ -39,7 +38,7 @@ async def create_upload_file(file: UploadFile = File(...)):
 	return {"data": res }
 
 @app.post("/qr/decode")
-def save_upload_file_tmp(upload_file: UploadFile = File(...)) :
+def save_upload_file_tmp_and_decode(upload_file: UploadFile = File(...)) :
 	try:
 		suffix = Path(upload_file.filename).suffix
 		with NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
@@ -53,5 +52,4 @@ def save_upload_file_tmp(upload_file: UploadFile = File(...)) :
 		upload_file.file.close()
 		res = con.Controller.decodeImageQR(tmp_path.__str__())
 	return {"decode": res, "path": tmp_path}
-	#return {"decode": res }
 
