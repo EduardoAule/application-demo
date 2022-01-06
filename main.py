@@ -7,7 +7,9 @@ from controller import Controller as con
 import shutil
 from pathlib import Path
 from tempfile import NamedTemporaryFile
+from fastapi.responses import FileResponse
 
+conn = con.Controller()
 app = FastAPI()
 
 fake_items_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"}]
@@ -17,28 +19,8 @@ fake_items_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"
 async def root():
     return {"message": "QR API Ready!"}
 
-# Recibe un int
-@app.get("/qr/decode")
-async def decode_QR_Image():
-	pathImg = os.path.abspath("qrtest.png")
-	res = con.Controller.decodeImageQR(pathImg)
-	return {"data": res }
-	#return {"sensor": "404 - not sensor found!"}
-
-@app.post("/uploadfile/")
-async def create_upload_file(file: UploadFile = File(...)):
-	return {"filename": file.filename}
-
-
-@app.post("/qr/deco")
-async def create_upload_file(file: UploadFile = File(...)):
-	# return {"filename": file.filename}
-	# contents = await file.read()
-	res = con.Controller.decodeImageQR("C:\\Users\\Edu\\AppData\\Local\\Temp\\tmphimqifml.png")
-	return {"data": res }
-
-@app.post("/qr/decode")
-def save_upload_file_tmp_and_decode(upload_file: UploadFile = File(...)) :
+@app.post("/qr/validate")
+async def save_upload_file_tmp_and_decode( upload_file: UploadFile = File(...)) :
 	try:
 		suffix = Path(upload_file.filename).suffix
 		with NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
@@ -50,6 +32,11 @@ def save_upload_file_tmp_and_decode(upload_file: UploadFile = File(...)) :
 			
 	finally:
 		upload_file.file.close()
-		res = con.Controller.decodeImageQR(tmp_path.__str__())
-	return {"decode": res, "path": tmp_path}
+		flag_door, res = conn.decodeImageQR(tmp_path.__str__())
+	return {"status": flag_door, "decode": res, "path": tmp_path}
 
+@app.get("/qr/generate")
+async def generate_qr():
+	res_img = conn.generateImageQR()
+	# return StreamingResponse(res_img, media_type="image/png")
+	return FileResponse(os.getcwd() + '/tmp/qrcode001.png', media_type="image/png")

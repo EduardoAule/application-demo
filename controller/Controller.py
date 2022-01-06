@@ -1,16 +1,26 @@
 import cv2
+from service import qr_service as qr
+from service import b64
+from service import utils
+qrc = qr.QR_Service()
+b64c = b64.B64()
+dtu = utils.Utils();
 
 class Controller():
 	def __init__(self):
 		print("Controller QR!")
 
-	def decodeImageQR(pathImg):
-		# Lectura de la imagen
-		img = cv2.imread(pathImg)
-		# Iniciar deteccion de QR Codes de OpenCV
-		dtector = cv2.QRCodeDetector()
-		# Detectar y Decodificar
-		data, bbox, stight_code = dtector.detectAndDecode(img)
-		print("data:", data)
-		return data
+	def decodeImageQR(self, pathImg):
+		# obtiene la data de la imagen QR
+		data = qrc.decode(pathImg)
+		print("decode:", b64c.decode(data))
+		# convierte la data(base64) a data legible
+		# y valida contra la fecha de expiracion
+		flag_door = dtu.validate(b64c.decode(data))
+		return {flag_door, data}
+	
+	def generateImageQR(self):
+
+		return qrc.generate()
+
 
