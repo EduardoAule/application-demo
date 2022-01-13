@@ -1,8 +1,8 @@
 import cv2
-from service import qr_service as qr
+from service import qr as qr
 from service import b64
 from service import utils
-qrc = qr.QR_Service()
+qrc = qr.QR()
 b64c = b64.B64()
 dtu = utils.Utils();
 
