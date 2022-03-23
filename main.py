@@ -17,7 +17,7 @@ fake_items_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"
 
 @app.get("/")
 async def root():
-    return {"message": "QR API Ready!"}
+    return {"message": "Bienvenidos al Workshop-Steren!"}
 
 @app.post("/qr/validate")
 async def save_upload_file_tmp_and_decode( upload_file: UploadFile = File(...)) :
