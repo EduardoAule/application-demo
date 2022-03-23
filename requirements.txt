@@ -3,6 +3,7 @@
 fastapi
 uvicorn
 # opencv-contrib-python
+Pillow
 opencv-python-headless
 qrcode
 pytz
