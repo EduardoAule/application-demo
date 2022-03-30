@@ -10,7 +10,7 @@ from tempfile import NamedTemporaryFile
 from fastapi.responses import FileResponse
 
 conn = con.Controller()
-app = FastAPI()
+app = FastAPI(root_path="/api/v1")
 
 fake_items_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"}]
 
