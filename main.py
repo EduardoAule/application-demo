@@ -35,10 +35,10 @@ async def save_upload_file_tmp_and_decode( upload_file: UploadFile = File(...)) 
 		flag_door, res = conn.decodeImageQR(tmp_path.__str__())
 	return {"status": flag_door, "decode": res, "path": tmp_path}
 
-@app.get("/qr/generate")
+@app.get("/qr/generatedummy")
 async def generate_qr():
 	res_img = conn.generateImageQR()
-	# return StreamingResponse(res_img, media_type="image/png")
+	
 	return FileResponse(os.getcwd() + '/tmp/qrcode001.png', media_type="image/png")
 
 @app.get("/qr/dummy")
