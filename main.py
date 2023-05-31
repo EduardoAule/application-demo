@@ -40,3 +40,8 @@ async def generate_qr():
 	res_img = conn.generateImageQR()
 	# return StreamingResponse(res_img, media_type="image/png")
 	return FileResponse(os.getcwd() + '/tmp/qrcode001.png', media_type="image/png")
+
+@app.get("/qr/dummy")
+async def generate_qr():
+	res_img = conn.generateImageQR()
+	return FileResponse(os.getcwd() + '/tmp/qrcode001.png', media_type="image/png")
